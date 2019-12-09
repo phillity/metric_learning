@@ -30,8 +30,8 @@ negative is closer to anchor than positive
 ||f(x_a) - f(x_p)||^2 - ||f(x_a) - f(x_n)||^2 + margin = postive value
 
 semi-hard triplets:
-||f(x_a) - f(x_p)||^2 < ||f(x_a) - f(x_n)||^2 < ||f(x_a) - f(x_p)||^2 + alpha
-postivie is closer to anchor than negative but negative is within margin of alpha
+||f(x_a) - f(x_p)||^2 < ||f(x_a) - f(x_n)||^2 < ||f(x_a) - f(x_p)||^2 + margin
+postivie is closer to anchor than negative but negative is within margin
 ||f(x_a) - f(x_p)||^2 - ||f(x_a) - f(x_n)||^2 + margin = postive value
 """
 

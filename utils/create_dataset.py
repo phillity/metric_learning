@@ -7,7 +7,7 @@ from preprocess import align_image
 
 
 __all__ = [
-    'create_dataset'
+    "create_dataset"
 ]
 
 
@@ -52,4 +52,5 @@ def create_dataset(dataset_name, preprocess=True):
 
 
 if __name__ == "__main__":
-    create_dataset("vgg_5")
+    create_dataset("vggface2_train")
+    create_dataset("vggface2_test")

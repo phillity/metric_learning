@@ -26,18 +26,18 @@ def get_model(num_classes, embedding_size, target_size):
     x = L.Dense(embedding_size, activation="relu")(x)
     x = L.BatchNormalization()(x)
     # compile model with softmax loss function
-    predictions = L.Dense(num_classes, activation="softmax")(embeddings)
+    predictions = L.Dense(num_classes, activation="softmax")(x)
     model = Model(inputs=feat_extractor.input, outputs=predictions)
     model.compile("adam", loss="sparse_categorical_crossentropy",
                   metrics=["accuracy"])
     return model
 
 
-def train_model(model, dataset_name, generators, embedding_size):
+def train_model(model, dataset, generators, embedding_size):
     train_generator, val_generator = generators[0], generators[1]
 
     out_path = os.path.join(os.path.abspath(
-        ""), "models", dataset_name + "_pretrained_softmax_" + str(embedding_size) + "d.h5")
+        ""), "models", dataset + "_softmax_" + str(embedding_size) + "d.h5")
     log = CSVLogger(out_path[:-2] + "log")
 
     mc = ModelCheckpoint(out_path, monitor="val_loss",
@@ -62,10 +62,10 @@ if __name__ == "__main__":
                         help="image size to use in training")
     args = vars(parser.parse_args())
 
-    dataset = "train"
+    dataset = "vggface2_train"
 
     generators = get_generators(
-        dataset, batch_size=args["batch_size"], target_size=args["image_size"])
+        dataset, batch_size=args["batch_size"], target_size=args["image_size"], metric="softmax")
     train_generator, val_generator, test_generator = generators[0], generators[1], generators[2]
 
     model = get_model(num_classes=train_generator.num_classes,

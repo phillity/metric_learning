@@ -60,19 +60,19 @@ def train_model(finetune_model, dataset_name, generators, embedding_size, metric
 
     if metric == "contrastive":
         out_path = os.path.join(os.path.abspath(
-            ""), "models", dataset_name + "_finetuned_contrastive_" + str(embedding_size) + "d.h5")
+            ""), "models", dataset_name + "_contrastive_" + str(embedding_size) + "d.h5")
     elif metric == "triplet":
         out_path = os.path.join(os.path.abspath(
-            ""), "models", dataset_name + "_finetuned_triplet_" + str(embedding_size) + "d.h5")
+            ""), "models", dataset_name + "_triplet_" + str(embedding_size) + "d.h5")
     elif metric == "lmcl":
         out_path = os.path.join(os.path.abspath(
-            ""), "models", dataset_name + "_finetuned_lmcl_" + str(embedding_size) + "d.h5")
+            ""), "models", dataset_name + "_lmcl_" + str(embedding_size) + "d.h5")
     elif metric == "aaml":
         out_path = os.path.join(os.path.abspath(
-            ""), "models", dataset_name + "_finetuned_aaml_" + str(embedding_size) + "d.h5")
+            ""), "models", dataset_name + "_aaml_" + str(embedding_size) + "d.h5")
     else:
         out_path = os.path.join(os.path.abspath(
-            ""), "models", dataset_name + "_finetuned_softmax_" + str(embedding_size) + "d.h5")
+            ""), "models", dataset_name + "_softmax_" + str(embedding_size) + "d.h5")
     log = CSVLogger(out_path[:-2] + "log")
     mc = ModelCheckpoint(out_path, monitor="val_loss",
                          save_best_only=True, verbose=1)
@@ -109,18 +109,18 @@ if __name__ == "__main__":
                         help="image size to use in training")
     args = vars(parser.parse_args())
 
-    dataset_name = "test"
-
-    pretrained_model = load_model(os.path.join(os.path.abspath(
-        ""), "models", "train_pretrained_softmax_" + str(embedding_size) + "d.h5"))
-    # print(pretrained_model.summary())
+    dataset_name = "vggface2_test"
 
     generators = get_generators(
         dataset_name, batch_size=args["batch_size"], target_size=args["image_size"], metric=args["metric"])
     train_generator, val_generator, test_generator = generators[0], generators[1], generators[2]
 
+    pretrained_model = load_model(os.path.join(os.path.abspath(
+        ""), "models", "vggface2_train_softmax_" + str(embedding_size) + "d.h5"))
+    # print(pretrained_model.summary())
+
     finetune_model = get_model(pretrained_model, num_classes=train_generator.num_classes,
                                embedding_size=args["embedding_size"], target_size=args["image_size"], metric=args["metric"])
 
-    model = train_model(
+    finetune_model, history = train_model(
         finetune_model, dataset_name, generators, embedding_size=args["embedding_size"], metric=args["metric"])

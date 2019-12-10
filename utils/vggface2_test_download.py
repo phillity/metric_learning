@@ -7,30 +7,30 @@ import requests
 LOGIN_URL = "http://zeus.robots.ox.ac.uk/vgg_face2/login/"
 FILE_URL = "http://zeus.robots.ox.ac.uk/vgg_face2/get_file?fname=vggface2_test.tar.gz"
 
-print('Please enter your VGG Face 2 credentials:')
-user_string = input('    User: ')
-password_string = getpass.getpass(prompt='    Password: ')
+print("Please enter your VGG Face 2 credentials:")
+user_string = input("    User: ")
+password_string = getpass.getpass(prompt="    Password: ")
 
 payload = {
-    'username': user_string,
-    'password': password_string
+    "username": user_string,
+    "password": password_string
 }
 
 session = requests.session()
 r = session.get(LOGIN_URL)
 
-if 'csrftoken' in session.cookies:
-    csrftoken = session.cookies['csrftoken']
-elif 'csrf' in session.cookies:
-    csrftoken = session.cookies['csrf']
+if "csrftoken" in session.cookies:
+    csrftoken = session.cookies["csrftoken"]
+elif "csrf" in session.cookies:
+    csrftoken = session.cookies["csrf"]
 else:
     raise ValueError("Unable to locate CSRF token.")
 
-payload['csrfmiddlewaretoken'] = csrftoken
+payload["csrfmiddlewaretoken"] = csrftoken
 
 r = session.post(LOGIN_URL, data=payload)
 
-filename = os.path.join(os.path.abspath(""), "data", FILE_URL.split('=')[-1])
+filename = os.path.join(os.path.abspath(""), "data", FILE_URL.split("=")[-1])
 
 with open(filename, "wb") as f:
     print(f"Downloading file: `{filename}`")

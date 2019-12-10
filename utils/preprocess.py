@@ -6,7 +6,7 @@ from mtcnn import MTCNN
 
 
 __all__ = [
-    'align_image', 'preprocess'
+    "align_image", "preprocess"
 ]
 
 
@@ -56,10 +56,10 @@ def crop_image(img, margin=True):
             x, y, w, h = d["box"][0], d["box"][1], d["box"][2], d["box"][3]
             bb = np.array([[x, y], [x + w, y + h]])
             img_center = np.array([img.shape[1] / 2, img.shape[0] / 2])
-            '''
+            """
             img = cv2.rectangle(img, (bb[0, 0], bb[0, 1]), (bb[1, 0], bb[1, 1]), (0, 255, 0), 2)
             cv2.imwrite("tom_1.jpg", img)
-            '''
+            """
             dists.append(rect_point_dist(d["box"], img_center))
         idx = np.argmin(dists)
         det = det[idx]
@@ -68,10 +68,10 @@ def crop_image(img, margin=True):
     bb = np.array([[x, y], [x + w, y + h]])
     kp = det["keypoints"]
 
-    '''
+    """
     img = cv2.rectangle(img, (bb[0, 0], bb[0, 1]), (bb[1, 0], bb[1, 1]), (0, 255, 0), 2)
     cv2.imwrite("tom_4.jpg", img)
-    '''
+    """
     if margin:
         y_margin = int(0.075 * ((y + h) + y) / 2.)
         x_margin = int(0.05 * ((x + w) + x) / 2.)
@@ -83,10 +83,10 @@ def crop_image(img, margin=True):
     else:
         crop_img = img[y:y + h, x:x + w]
 
-    '''
+    """
     crop_img = cv2.rectangle(crop_img, (bb[0, 0], bb[0, 1]), (bb[1, 0], bb[1, 1]), (0, 255, 0), 2)
     cv2.imwrite("tom_5.jpg", crop_img)
-    '''
+    """
 
     return crop_img
 
@@ -110,10 +110,10 @@ def align_image(img, margin=True):
             x, y, w, h = d["box"][0], d["box"][1], d["box"][2], d["box"][3]
             bb = np.array([[x, y], [x + w, y + h]])
             img_center = np.array([img.shape[1] / 2, img.shape[0] / 2])
-            '''
+            """
             img = cv2.rectangle(img, (bb[0, 0], bb[0, 1]), (bb[1, 0], bb[1, 1]), (0, 255, 0), 2)
             cv2.imwrite("tom_1.jpg", img)
-            '''
+            """
             dists.append(rect_point_dist(d["box"], img_center))
         idx = np.argmin(dists)
         det = det[idx]
@@ -133,12 +133,12 @@ def align_image(img, margin=True):
     eye_center[1] = (kp["left_eye"][1] + kp["right_eye"][1]) / 2
     eye_center[2] = 1.
 
-    '''
+    """
     for k, p in kp.items():
         img = cv2.circle(img, (p[0], p[1]), 3, (0, 255, 0), 2)
     img = cv2.circle(img, (int(eye_center[0]), int(eye_center[1])), 3, (0, 0, 255), 2)
     cv2.imwrite("tom_2.jpg", img)
-    '''
+    """
 
     # get center point of image
     (h, w) = img.shape[:2]
@@ -159,13 +159,13 @@ def align_image(img, margin=True):
     rot_img = cv2.warpAffine(img, M, (nW, nH))
     eye_center = np.dot(M, eye_center)
 
-    '''
+    """
     for k, p in kp.items():
         p = np.dot(M, np.array([p[0], p[1], 1.]))
         rot_img = cv2.circle(rot_img, (int(p[0]), int(p[1])), 3, (0, 255, 0), 2)
     rot_img = cv2.circle(rot_img, (int(eye_center[0]), int(eye_center[1])), 3, (0, 0, 255), 2)
     cv2.imwrite("tom_3.jpg", rot_img)
-    '''
+    """
 
     try:
         img = crop_image(rot_img, margin)
@@ -190,11 +190,11 @@ def preprocess(dataset_name):
             print(os.path.join(data_path, subject, image))
             img = cv2.imread(os.path.join(data_path, subject, image))
             crop_img = align_image(img)
-            '''
+            """
             cv2.imshow("image", img)
             cv2.imshow("aligned image", crop_img)
             cv2.waitKey(0)
-            '''
+            """
             cv2.imwrite(os.path.join(dataset_path, subject, image), crop_img)
 
 

@@ -42,7 +42,7 @@ class SphereFace(L.Layer):
         # normalize final W layer
         W = tf.nn.l2_normalize(self.W, axis=0)
         # get logits from multiplying embeddings (batch_size, embedding_size) and W (embedding_size, num_classes)
-        logits = tf.matmul(embeddings, self.W)
+        logits = tf.matmul(embeddings, W)
         # clip logits to prevent zero division when backward
         theta = tf.acos(K.clip(logits, -1.0 + K.epsilon(), 1.0 - K.epsilon()))
         # multiply margin with logits
